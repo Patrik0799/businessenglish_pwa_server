@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<meta charset="UTF-8" />
+
+<script src="https://ccmjs.github.io/ccm/versions/ccm-21.1.3.js"></script>
+<script>
+  run().then(() => console.log("finished!"));
+
+  async function run() {
+    const store = await ccm.store({
+      name: "test",
+      url: "http://localhost:8080",
+    });
+
+    console.log("CREATE", await store.set({ key: "foo", bar: "baz" }));
+    console.log("READ", await store.get("foo"));
+    console.log("UPDATE", await store.set({ key: "foo", bar: "bug" }));
+    //console.log( 'DELETE', await store.del( 'foo' ) );
+  }
+</script>

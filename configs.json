@@ -1,0 +1,16 @@
+{
+  "local": {
+    "http": {
+      "port": 8080
+    },
+    "domain": "localhost",
+    "max_data_size": 16777216,
+    "mongo": {
+      "host": "localhost",
+      "port": 27017,
+      "user": "root",
+      "password": "",
+      "db": "ccm"
+    }
+  }
+}
