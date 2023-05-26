@@ -7,10 +7,11 @@ const http = require("http");
 const webpush = require("web-push");
 const deparam = require("node-jquery-deparam");
 const moment = require("moment");
+require("dotenv").config();
 
-const publicVapidKey =
-  "BOSbPFmncQ-3pGsgf_1fRVs_5WDSJtul87zLTU6c1emrGiI4nHcHCuN-vTwpPsNjgdbpzPmHYs9U61qhLz0ysZk";
-const privateVapidKey = "oKJwSC15pOIZl0FAIu47GJn4WFFsMqojxADCgnOj8Fo";
+const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
+const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
+const MONGO_URL = process.env.MONGO_URL;
 
 webpush.setVapidDetails(
   "mailto:test@test.com",
@@ -351,7 +352,7 @@ connectMongoDB(() => {
 function connectMongoDB(callback, waited) {
   if (!mongodb || !config.mongo) return callback();
   mongodb.MongoClient.connect(
-    "mongodb+srv://pzelen2s:Matko119@cluster0.y0a5w3k.mongodb.net/?retryWrites=true&w=majority",
+    MONGO_URL,
     { useNewUrlParser: true },
     (err, client) => {
       if (!err) {

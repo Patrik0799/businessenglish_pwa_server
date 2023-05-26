@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/ccmjs/data-server#readme",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "http": "0.0.0",
     "moment": "^2.24.0",
     "mongodb": "^3.2.7",
