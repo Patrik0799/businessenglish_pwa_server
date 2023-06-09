@@ -3,7 +3,6 @@ const config = configs.local;
 
 let mongodb = require("mongodb");
 const http = require("http");
-//const WebSocket = require("ws");
 const webpush = require("web-push");
 const deparam = require("node-jquery-deparam");
 const moment = require("moment");
@@ -27,22 +26,6 @@ connectMongoDB(() => {
 
   function startWebserver() {
     const http_server = http.createServer(handleRequest);
-
-    /*const websocket_server = new WebSocket.Server({ server: http_server });
-
-    websocket_server.on("connection", ws => {
-      console.log("WebSocket connection established");
-
-      ws.on("message", message => {
-        console.log("Received message ", message);
-
-        ws.send("Server received your message", message);
-      });
-    });
-
-    websocket_server.on("close", () => {
-      console.log("A client has disconnected.");
-    });*/
 
     http_server.listen(config.http.port);
 
@@ -158,11 +141,11 @@ connectMongoDB(() => {
         }
 
         async function set() {
-          const push_subs = mongodb.collection("push_subs");
-          const query = { _id: "push_notification" };
-          const subscription = await push_subs.findOne(query);
+          const pzelen2s_push_subs = mongodb.collection("pzelen2s_push_subs");
+          //const query = { _id: "push_notification" };
+          //getDataset({}, subscribtions => {});
 
-          console.log("SUB OBJECT:", subscription.value);
+          //console.log("SUB OBJECT:", subscription.value);
 
           const payload = JSON.stringify({
             title: "New Update",
@@ -204,14 +187,29 @@ connectMongoDB(() => {
               priodata.created_at = priodata.updated_at;
               collection.insertOne(priodata, success);
             }
-
+            //Here I can get all the subs objects
             function success() {
               getDataset(data.set.key, finish);
-              webpush
-                .sendNotification(subscription.value, payload)
-                .catch(err => {
-                  console.log(err);
+
+              pzelen2s_push_subs.find({}).toArray((err, items) => {
+                if (err) {
+                  console.log(
+                    "Error occurred while retrieving documents from collection",
+                    err
+                  );
+                  return;
+                }
+                const arrayOfItems = items;
+
+                arrayOfItems.map(item => {
+                  webpush.sendNotification(item.value, payload).catch(err => {
+                    pzelen2s_push_subs.deleteOne({
+                      _id: item._id,
+                    });
+                    console.log(err);
+                  });
                 });
+              });
             }
           });
         }
